@@ -35,10 +35,6 @@
 <body>
   <h1>🐍 Snake Game</h1>
   <canvas id="game" width="400" height="400"></canvas>
-  <div>
-    <input type="text" id="player" placeholder="your nickname" />
-    <button onclick="submitScore()">click here when you die</button>
-  </div>
   <div id="score">Score: 0</div>
   <h2>🏆 Leaderboard</h2>
   <div id="leaderboard"></div>
@@ -83,7 +79,8 @@
         ctx.fillStyle = "gray";
         ctx.font = "20px Arial";
         ctx.textAlign = "center";
-        ctx.fillText("Appuie sur une touche pour commencer", canvas.width / 2, canvas.height / 2);
+        ctx.fillText("use arrow keys to move", canvas.width / 2, canvas.height / 2);
+        const player = prompt("Enter your name:", "Player");
         return;
       }
 
