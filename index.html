@@ -35,8 +35,13 @@
 <body>
   <h1>🐍 Snake Game</h1>
   <canvas id="game" width="400" height="400"></canvas>
+  <div>
+    <input type="text" id="player" placeholder="your nickname" />
+    <button onclick="submitScore()">click here when you die</button>
+  </div>
+  <div id="score">Score: 0</div>
   <h2>🏆 Leaderboard</h2>
-  <div id="leaderboard"><p>Loading...</p></div>
+  <div id="leaderboard"></div>
 
   <script>
     const canvas = document.getElementById("game");
