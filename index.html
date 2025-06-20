@@ -42,7 +42,6 @@
   <script>
     const canvas = document.getElementById("game");
     const ctx = canvas.getContext("2d");
-    const player = prompt("Enter your name:", "Player");
     const box = 20;
     let snake = [{ x: 200, y: 200 }];
     let food = { x: box * 5, y: box * 5 };
@@ -104,6 +103,7 @@
         snake.some(s => s.x === head.x && s.y === head.y)
       ) {
         clearInterval(game);
+        const player = prompt("Enter your name:", "Player");
         gameOver = true;
         submitScore(score);
         return;
