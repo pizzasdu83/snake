@@ -128,7 +128,7 @@
       const player = prompt("Game Over! Enter your name:", "Player");
       if (!player) return;
 
-      await fetch("/api", {
+      await fetch("https://on.klave.network", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -142,7 +142,7 @@
     }
 
     async function fetchLeaderboard() {
-      const res = await fetch("/api", {
+      const res = await fetch("https://on.klave.network", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
