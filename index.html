@@ -124,43 +124,24 @@
 
     let game = setInterval(draw, 100);
 
-    async function submitScore(score) {
-      const player = prompt("Game Over! Enter your name:", "Player");
-      if (!player) return;
-
-      await fetch("https://on.klave.network", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          app: "2acec877.snake_leaderboard.snake.klave.network",
-          method: "submitScore",
-          requestId: "submit_" + Math.random(),
-          input: { player, score: score.toString() },
-        })
-      });
-      fetchLeaderboard();
+    function submitScore() {
+      const name = document.getElementById("player").value || "Anonyme";
+      const scores = JSON.parse(localStorage.getItem("leaderboard") || "[]");
+      scores.push({ name, score });
+      scores.sort((a, b) => b.score - a.score);
+      localStorage.setItem("leaderboard", JSON.stringify(scores.slice(0, 5)));
+      renderLeaderboard();
     }
 
-    async function fetchLeaderboard() {
-      const res = await fetch("https://on.klave.network", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          app: "2acec877.snake_leaderboard.snake.klave.network",
-          method: "fetchScore",
-          requestId: "leaderboard_" + Math.random(),
-          input: {}
-        })
-      });
-      const data = await res.json();
-
-      const leaderboard = document.getElementById("leaderboard");
-      leaderboard.innerHTML = "<ul>" +
-        data.map(entry => `<li>${entry.player}: ${entry.score}</li>`).join("") +
-        "</ul>";
+    function renderLeaderboard() {
+      const scores = JSON.parse(localStorage.getItem("leaderboard") || "[]");
+      const container = document.getElementById("leaderboard");
+      container.innerHTML = "<h2>🏆 Leaderboard</h2>" +
+        scores.map(s => `<div>${s.name} : ${s.score}</div>`).join("");
     }
 
-    fetchLeaderboard();
+    renderLeaderboard();
+    
   </script>
 </body>
 </html>
