@@ -30,6 +30,15 @@
     #leaderboard ul {
       padding-left: 20px;
     }
+    input {
+      padding: 5px;
+      font-size: 16px;
+    }
+    button {
+      padding: 5px 10px;
+      font-size: 16px;
+      margin-left: 5px;
+    }
   </style>
 </head>
 <body>
@@ -106,6 +115,7 @@
         snake.some(s => s.x === head.x && s.y === head.y)
       ) {
         clearInterval(game);
+        alert("Fin du jeu ! Score: " + score);
         gameOver = true;
         submitScore(score);
         return;
