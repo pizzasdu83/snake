@@ -1,0 +1,14 @@
+{
+    "version": "1",
+    "branches": [
+        "*"
+    ],
+    "applications": [
+        {
+            "slug": "snake_leaderboard",
+            "description": "This is an honest test for a leaderboard for snake",
+            "version": "0.0.1",
+            "rootDir": "/apps/snake_leaderboard"
+        }
+    ]
+}
