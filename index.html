@@ -82,7 +82,6 @@
 
     async function renderLeaderboard() {
       const leaderboard = document.getElementById("leaderboard");
-      leaderboard.innerHTML = "<h2>🏆 Leaderboard</h2><p>Loading...</p>";
 
       const scoresCol = collection(db, "scores");
       const q = query(scoresCol, orderBy("score", "desc"), limit(5));
@@ -124,6 +123,18 @@
         case "ArrowRight":
           if (direction !== "LEFT") direction = "RIGHT";
           break;
+        case "KeyW":
+          if (direction !== "DOWN") direction = "UP";
+          break;
+        case "KeyS":
+          if (direction !== "UP") direction = "DOWN";
+          break;
+        case "KeyA":
+          if (direction !== "RIGHT") direction = "LEFT";
+          break;
+        case "KeyD":
+          if (direction !== "LEFT") direction = "RIGHT";  
+          break;
       }
     });
     
@@ -133,7 +144,7 @@
         ctx.fillStyle = "gray";
         ctx.font = "20px Arial";
         ctx.textAlign = "center";
-        ctx.fillText("Use arrow keys to move", canvas.width / 2, canvas.height / 2);
+        ctx.fillText("Use arrow keys or wasd to move", canvas.width / 2, canvas.height / 2);
         renderLeaderboard();
         return;
       }
