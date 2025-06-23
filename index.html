@@ -47,10 +47,6 @@
 <body>
   <h1>🐍 Snake Game</h1>
   <canvas id="game" width="400" height="400"></canvas>
-  <div>
-    <input type="text" id="player" placeholder="Your nickname" />
-    <button onclick="submitScore()">submit your score</button>
-  </div>
   <div id="score">Score: 0</div>
   <div id="leaderboard"></div>
 
@@ -110,30 +106,22 @@
         hasStarted = true;
       }
 
-      switch (e.key) {
+      switch (e.code) {
         case "ArrowUp":
-          if (direction !== "DOWN") direction = "UP";
-          break;
-        case "ArrowDown":
-          if (direction !== "UP") direction = "DOWN";
-          break;
-        case "ArrowLeft":
-          if (direction !== "RIGHT") direction = "LEFT";
-          break;
-        case "ArrowRight":
-          if (direction !== "LEFT") direction = "RIGHT";
-          break;
         case "KeyW":
           if (direction !== "DOWN") direction = "UP";
           break;
+        case "ArrowDown":
         case "KeyS":
           if (direction !== "UP") direction = "DOWN";
           break;
-        case "KeyA":
+        case "ArrowLeft";
+        case "KeyA"
           if (direction !== "RIGHT") direction = "LEFT";
           break;
+        case "ArrowRight":
         case "KeyD":
-          if (direction !== "LEFT") direction = "RIGHT";  
+          if (direction !== "LEFT") direction = "RIGHT";
           break;
       }
     });
@@ -144,7 +132,7 @@
         ctx.fillStyle = "gray";
         ctx.font = "20px Arial";
         ctx.textAlign = "center";
-        ctx.fillText("Use arrow keys or wasd to move", canvas.width / 2, canvas.height / 2);
+        ctx.fillText("Use arrow keys or wasd (works in azerty or an other one) to move", canvas.width / 2, canvas.height / 2);
         renderLeaderboard();
         return;
       }
