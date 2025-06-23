@@ -106,21 +106,21 @@
         hasStarted = true;
       }
 
-      switch (e.code) {
+      switch (e.key) {
         case "ArrowUp":
-        case "KeyW":
+        case "w":
           if (direction !== "DOWN") direction = "UP";
           break;
         case "ArrowDown":
-        case "KeyS":
+        case "s":
           if (direction !== "UP") direction = "DOWN";
           break;
         case "ArrowLeft";
-        case "KeyA"
+        case "a"
           if (direction !== "RIGHT") direction = "LEFT";
           break;
         case "ArrowRight":
-        case "KeyD":
+        case "d":
           if (direction !== "LEFT") direction = "RIGHT";
           break;
       }
@@ -132,8 +132,7 @@
         ctx.fillStyle = "gray";
         ctx.font = "20px Arial";
         ctx.textAlign = "center";
-        ctx.fillText("Use arrow keys or wasd (works in azerty or an other one) to move", canvas.width / 2, canvas.height / 2);
-        renderLeaderboard();
+        ctx.fillText("Use arrow keys or wasd to move", canvas.width / 2, canvas.height / 2);
         return;
       }
 
@@ -178,6 +177,7 @@
       }
     }
 
+    renderLeaderboard();
     let game = setInterval(draw, 100);
     
   </script>
