@@ -54,7 +54,46 @@
   <div id="score">Score: 0</div>
   <div id="leaderboard"></div>
 
-  <script>
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+    import { getFirestore, collection, addDoc, getDocs, query, orderBy, limit } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyC8DnvePCAvI12F5hKYM8fNL1KyNhKP4Ro",
+    authDomain: "snake-leaderboard-f1ff6.firebaseapp.com",
+    projectId: "snake-leaderboard-f1ff6",
+    storageBucket: "snake-leaderboard-f1ff6.firebasestorage.app",
+    messagingSenderId: "1701365176",
+    appId: "1:1701365176:web:260637b59c24f5e0cb3b4d"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
+  // Fonctions Firebase pour leaderboard
+  async function submitScore(player, score) {
+    await addDoc(collection(db, "scores"), {
+      name: player,
+      score: score,
+      createdAt: new Date()
+    });
+    renderLeaderboard();
+  }
+
+  async function renderLeaderboard() {
+    const leaderboard = document.getElementById("leaderboard");
+    leaderboard.innerHTML = "<h2>🏆 Leaderboard</h2><p>Loading...</p>";
+
+    const scoresCol = collection(db, "scores");
+    const q = query(scoresCol, orderBy("score", "desc"), limit(5));
+    const querySnapshot = await getDocs(q);
+
+    leaderboard.innerHTML = "<h2>🏆 Leaderboard</h2><ul>" +
+      querySnapshot.docs.map(doc => {
+        const data = doc.data();
+        return `<li>${data.name}: ${data.score}</li>`;
+      }).join("") + "</ul>";
+  }
     const canvas = document.getElementById("game");
     const ctx = canvas.getContext("2d");
     const box = 20;
@@ -118,9 +157,9 @@
         snake.some(s => s.x === head.x && s.y === head.y)
       ) {
         clearInterval(game);
-        alert("Fin du jeu ! Score: " + score);
         gameOver = true;
-        submitScore(score);
+        const name = prompt("Nom du joueur :");
+        if (name) submitScore(name, score);
         return;
       }
 
@@ -138,24 +177,6 @@
     }
 
     let game = setInterval(draw, 100);
-
-    function submitScore() {
-      const name = document.getElementById("player").value || "Anonyme";
-      const scores = JSON.parse(localStorage.getItem("leaderboard") || "[]");
-      scores.push({ name, score });
-      scores.sort((a, b) => b.score - a.score);
-      localStorage.setItem("leaderboard", JSON.stringify(scores.slice(0, 5)));
-      renderLeaderboard();
-    }
-
-    function renderLeaderboard() {
-      const scores = JSON.parse(localStorage.getItem("leaderboard") || "[]");
-      const container = document.getElementById("leaderboard");
-      container.innerHTML = "<h2>🏆 Leaderboard</h2>" +
-        scores.map(s => `<div>${s.name} : ${s.score}</div>`).join("");
-    }
-
-    renderLeaderboard();
     
   </script>
 </body>
