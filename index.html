@@ -16,6 +16,25 @@
       color: white;
       font-family: sans-serif;
     }
+	h2 {
+	  margin-top: 0px;
+	  margin-bottom: 50px;
+      text-align: center;
+      font-family: sans-serif;
+      font-size: 3rem;
+      letter-spacing: 0.15rem;
+      text-transform: uppercase;
+      color: #fff;
+      text-shadow: -4px 4px #ef3550,
+                   -8px 8px #f48fb1,
+                   -12px 12px #7e57c2,
+                   -16px 16px #2196f3,
+                   -20px 20px #26c6da,
+                   -24px 24px #43a047,
+                   -28px 28px #eeff41,
+                   -32px 32px #f9a825,
+                   -36px 36px #ff5722;
+	}
     body {
       background-color: #000;
       color: #fff;
@@ -100,8 +119,9 @@
   </style>
 </head>
 <body>
-  <h1>🐍 Snake Game</h1>
+  <h2>🐍 Snake Game</h2>
   <canvas id="game" width="400" height="400"></canvas>
+  <h2>Score: <span id="myText"></span></h2>
   <h1><strong>BUTTONS ARE USELESS</strong> (for now...)</h1>
   <button class="button button1" oneclick="fuckedup()"><strong>⮙</strong></button>
   <h1></h1>
@@ -233,6 +253,7 @@
 			ctx.fillText("(compatible with any one)", canvas.width / 2, canvas.height / 2 + 30);
 			return;
 		}
+		document.getElementById("myText").innerHTML = score;
 
 		// Dessiner chaque segment avec sa propre couleur
 		snake.forEach(segment => {
