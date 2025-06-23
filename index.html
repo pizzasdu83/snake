@@ -33,22 +33,84 @@
     #leaderboard ul {
       padding-left: 20px;
     }
-    input {
-      padding: 5px;
-      font-size: 16px;
+    .button {
+	  border: none;
+      color: white;
+      padding: 8px 16px;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      font-size: 30px;
+      margin: 4px 2px;
+      transition-duration: 0.4s;
+      cursor: pointer;
     }
-    button {
-      padding: 5px 10px;
-      font-size: 16px;
-      margin-left: 5px;
+
+    .button1 {
+      background-color: white; 
+      color: black; 
+      border: 2px solid #808080;
     }
+
+    .button1:hover {
+      background-color: #808080;
+      color: white;
+    }
+    .button2 {
+      background-color: white; 
+      color: black; 
+      border: 2px solid #808080;
+    }
+
+    .button2:hover {
+      background-color: #808080;
+      color: white;
+    }
+
+    .button3 {
+      background-color: white; 
+      color: black; 
+      border: 2px solid #808080;
+    }
+
+    .button3:hover {
+      background-color: #808080;
+      color: white;
+    }
+
+    .button4 {
+      background-color: white; 
+      color: black; 
+      border: 2px solid #808080;
+    }
+
+    .button4:hover {
+      background-color: #808080;
+      color: white;
+    }
+	
+	.space {
+	  background-color:#000;
+	  color: #000;
+	  border-left: 10px solid #000;
+	  border-right: 10px solid #000;
+	}
+	
+
   </style>
 </head>
 <body>
   <h1>🐍 Snake Game</h1>
   <canvas id="game" width="400" height="400"></canvas>
+  <h1><strong>BUTTONS ARE USELESS</strong> (for now...)</h1>
+  <button class="button button1" oneclick="fuckedup()"><strong>⮙</strong></button>
+  <h1></h1>
+  <button class="button button3" oneclick="fuckedleft()"><strong>⮘</strong></button>
+  <button class="button space"><strong>⮘</strong></button>
+  <button class="button button4"oneclick="fuckedright()"><strong>⮚</strong></button>
+  <h1></h1>
+  <button class="button button2"oneclick="fuckeddown()"><strong>⮛</strong></button>
   <div id="leaderboard"></div>
-
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
     import { getFirestore, collection, addDoc, getDocs, query, orderBy, limit } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
@@ -93,12 +155,28 @@
     const canvas = document.getElementById("game");
     const ctx = canvas.getContext("2d");
     const box = 20;
-    let snake = [{ x: 200, y: 200 }];
+    let snake = [{ x: 200, y: 200, color: "lime" }];
     let food = { x: box * 5, y: box * 5 };
     let direction = null;
     let hasStarted = false;
     let score = 0;
     let gameOver = false;
+	let seg = 0;
+	let snakeColor = getRandomColor();
+	renderLeaderboard;
+
+    function fuckedup() {
+	  if (direction !== "DOWN") direction = "UP";
+	}
+	function fuckeddown() {
+	  if (direction !== "UP") direction = "DOWN";
+	}
+	function fuckedleft() {
+	  if (direction !== "RIGHT") direction = "LEFT";
+	}
+	function fuckedright() {
+	  if (direction !== "LEFT") direction = "RIGHT";
+	}
 
     document.addEventListener("keydown", (e) => {
       if (!hasStarted) {
@@ -133,60 +211,85 @@
       }
     });
     
+	function getRandomColor() {
+		const letters = '0123456789ABCDEF';
+		let color = '#';
+		for (let i = 0; i < 6; i++) {
+			color += letters[Math.floor(Math.random() * 16)];
+		}
+		return color;
+	}
+
+	
     function draw() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      if (!hasStarted || direction === null) {
-        ctx.fillStyle = "gray";
-        ctx.font = "20px Arial";
-        ctx.textAlign = "center";
-        ctx.fillText("Use arrow keys or keyboard (compatible with any one) to move", canvas.width / 2, canvas.height / 2);
-        renderLeaderboard();
-        return;
-      }
+		ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-      for (let i = 0; i < snake.length; i++) {
-        ctx.fillStyle = i === 0 ? "lime" : "green";
-        ctx.fillRect(snake[i].x, snake[i].y, box, box);
-      }
+		if (!hasStarted || direction === null) {
+			ctx.fillStyle = "gray";
+			ctx.font = "20px Arial";
+			ctx.textAlign = "center";
+			ctx.fillText("Use arrow keys or keyboard to move", canvas.width / 2, canvas.height / 2);
+			ctx.fillText("(compatible with any one)", canvas.width / 2, canvas.height / 2 + 30);
+			return;
+		}
 
-      ctx.fillStyle = "red";
-      ctx.fillRect(food.x, food.y, box, box);
+		// Dessiner chaque segment avec sa propre couleur
+		snake.forEach(segment => {
+			ctx.fillStyle = segment.color;
+			ctx.fillRect(segment.x, segment.y, box, box);
+		});
 
-      let head = { ...snake[0] };
-      if (direction === "LEFT") head.x -= box;
-      if (direction === "RIGHT") head.x += box;
-      if (direction === "UP") head.y -= box;
-      if (direction === "DOWN") head.y += box;
+		// Afficher la pomme
+		ctx.fillStyle = "red";
+		ctx.fillRect(food.x, food.y, box, box);
 
-      if (
-        head.x < 0 ||
-        head.x >= canvas.width ||
-        head.y < 0 ||
-        head.y >= canvas.height ||
-        snake.some(s => s.x === head.x && s.y === head.y)
-      ) {
-        clearInterval(game);
-        gameOver = true;
-        const name = prompt("Nom du joueur :");
-        if (name) submitScore(name, score);
-        return;
-      }
+		// Calcul des nouvelles coordonnées
+		let newX = snake[0].x;
+		let newY = snake[0].y;
 
-      snake.unshift(head);
+		if (direction === "LEFT") newX -= box;
+		if (direction === "RIGHT") newX += box;
+		if (direction === "UP") newY -= box;
+		if (direction === "DOWN") newY += box;
 
-      if (head.x === food.x && head.y === food.y) {
-        score++;
-        food = {
-          x: Math.floor(Math.random() * (canvas.width / box)) * box,
-          y: Math.floor(Math.random() * (canvas.height / box)) * box,
-        };
-      } else {
-        snake.pop();
-      }
-    }
+		// Vérification collision
+		if (
+			newX < 0 || newX >= canvas.width ||
+			newY < 0 || newY >= canvas.height ||
+			snake.some(s => s.x === newX && s.y === newY)
+		) {
+			clearInterval(game);
+			gameOver = true;
+			const name = prompt("Nom du joueur :");
+			if (name) submitScore(name, score);
+			return;
+		}
+
+		// Ajouter un nouveau segment coloré
+		const isEating = newX === food.x && newY === food.y;
+		const newSegment = {
+			x: newX,
+			y: newY,
+			color: isEating ? getRandomColor() : snake[0].color
+		};
+
+		snake.unshift(newSegment);
+
+		if (isEating) {
+			score++;
+			seg++;
+			food = {
+				x: Math.floor(Math.random() * (canvas.width / box)) * box,
+				y: Math.floor(Math.random() * (canvas.height / box)) * box
+			};
+		} else {
+			snake.pop();
+		}
+	}
 
     let game = setInterval(draw, 100);
-    
+    renderLeaderboard
+	
   </script>
 </body>
 </html>
