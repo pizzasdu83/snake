@@ -35,6 +35,11 @@
                    -32px 32px #f9a825,
                    -36px 36px #ff5722;
 	}
+	h3 {
+	  text-align: left;
+	  color: white;
+	  font-family: sans-serif;
+	}
     body {
       background-color: #000;
       color: #fff;
@@ -115,11 +120,24 @@
 	  border-right: 10px solid #000;
 	}
 	
+	section {
+	  float: left;
+	  margin: 0 1.5%;
+      width: 30%;
+	  }
 
   </style>
 </head>
 <body>
+  <header>
   <h2>🐍 Snake Game</h2>
+  </header>
+  <section>
+  <div style="width: 600px; display: table-cell;" id="leaderboard"></div>
+  <h3>Leaderboard may not work properly</h3>
+  <h3>due to data holder problems</h3>
+  </section>
+  <section>
   <canvas id="game" width="400" height="400"></canvas>
   <h2>Score: <span id="myText"></span></h2>
   <h1><strong>BUTTONS ARE USELESS</strong> (for now...)</h1>
@@ -130,8 +148,10 @@
   <button class="button button4"oneclick="fuckedright()"><strong>⮚</strong></button>
   <h1></h1>
   <button class="button button2"oneclick="fuckeddown()"><strong>⮛</strong></button>
-  <h1>Leaderboard may not work properly due to data holder problems</h1>
-  <div id="leaderboard"></div>
+  </section>
+  <section>
+  <div id="lleaderboard"></div>
+  <section>
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
     import { getFirestore, collection, addDoc, getDocs, query, orderBy, limit } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
@@ -284,6 +304,7 @@
 			gameOver = true;
 			const name = prompt("Nickname Plaese :3");
 			if (name) submitScore(name, score);
+			submitScoreLocale();
 			return;
 		}
 
@@ -310,7 +331,25 @@
 	}
 
     let game = setInterval(draw, 100);
-    renderLeaderboard
+	function submitScoreLocale() {
+      const name = prompt("Nickname again please (づ｡◕‿‿◕｡)づ") || "Anonymous"; // Prompt for name
+      const scores = JSON.parse(localStorage.getItem("lleaderboard") || "[]");
+      scores.push({ name, score });
+      scores.sort((a, b) => b.score - a.score); // Sort scores in descending order
+      localStorage.setItem("lleaderboard", JSON.stringify(scores.slice(0, 5))); // Keep top 5 scores
+      renderLeaderboardLocale(); // Update the leaderboard display
+	}
+
+
+    function renderLeaderboardLocale() {
+      const scores = JSON.parse(localStorage.getItem("lleaderboard") || "[]");
+      const container = document.getElementById("lleaderboard");
+      container.innerHTML = "<h2>🏆 Local Leaderboard</h2>" +
+          scores.map(s => `<div>${s.name} : ${s.score}</div>`).join("");
+	}
+
+	renderLeaderboardLocale();
+    renderLeaderboard();
 	
   </script>
 </body>
