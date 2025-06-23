@@ -110,6 +110,7 @@
   <button class="button button4"oneclick="fuckedright()"><strong>⮚</strong></button>
   <h1></h1>
   <button class="button button2"oneclick="fuckeddown()"><strong>⮛</strong></button>
+  <h1>Leaderboard may not work properly due to data holder problems</h1>
   <div id="leaderboard"></div>
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
@@ -260,7 +261,7 @@
 		) {
 			clearInterval(game);
 			gameOver = true;
-			const name = prompt("Nom du joueur :");
+			const name = prompt("Nickname Plaese :3");
 			if (name) submitScore(name, score);
 			return;
 		}
