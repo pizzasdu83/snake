@@ -176,7 +176,6 @@
         score: score,
         createdAt: new Date()
       });
-      renderLeaderboard();
     }
 
     async function renderLeaderboard() {
@@ -305,6 +304,7 @@
 			const name = prompt("Nickname Plaese :3");
 			if (name) submitScore(name, score);
 			submitScoreLocale();
+			renderLeaderboard();
 			return;
 		}
 
@@ -332,12 +332,12 @@
 
     let game = setInterval(draw, 100);
 	function submitScoreLocale() {
-      const name = prompt("Nickname again please (づ｡◕‿‿◕｡)づ") || "Anonymous"; // Prompt for name
-      const scores = JSON.parse(localStorage.getItem("lleaderboard") || "[]");
-      scores.push({ name, score });
-      scores.sort((a, b) => b.score - a.score); // Sort scores in descending order
-      localStorage.setItem("lleaderboard", JSON.stringify(scores.slice(0, 5))); // Keep top 5 scores
-      renderLeaderboardLocale(); // Update the leaderboard display
+      	  const name = prompt("Nickname again please (づ｡◕‿‿◕｡)づ") || "Anonymous"; // Prompt for name
+      	  const scores = JSON.parse(localStorage.getItem("lleaderboard") || "[]");
+      	  scores.push({ name, score });
+      	  scores.sort((a, b) => b.score - a.score); // Sort scores in descending order
+      	  localStorage.setItem("lleaderboard", JSON.stringify(scores.slice(0, 5))); // Keep top 5 scores
+      	  renderLeaderboardLocale(); // Update the leaderboard display
 	}
 
 
@@ -349,7 +349,6 @@
 	}
 
 	renderLeaderboardLocale();
-    renderLeaderboard();
 	
   </script>
 </body>
