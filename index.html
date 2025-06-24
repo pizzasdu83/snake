@@ -347,7 +347,7 @@
     function renderLeaderboardLocale() {
       const scores = JSON.parse(localStorage.getItem("lleaderboard") || "[]");
       const container = document.getElementById("lleaderboard");
-      container.innerHTML = "<h2>~~~~~~~~~~~~~~~~~~~~~~</h2>" +
+      container.innerHTML = "<h2>~~~~~~~~~~~~~~~~~~~~~~~</h2>" +
           scores.map(s => `<div>${s.name} : ${s.score}</div>`).join("");
 	}
 
