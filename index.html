@@ -133,7 +133,8 @@
   <h2>🐍 Snake Game</h2>
   </header>
   <section>
-  <div style="width: 600px; display: table-cell;" <h2>🏆 Leaderboard</h2> id="leaderboard"></div>
+  <h2>🏆 Leaderboard</h2>
+  <div style="width: 600px; display: table-cell;"id="leaderboard"></div>
   <h3>Leaderboard may not work properly</h3>
   <h3>due to data holder problems.</h3>
   <h3>It appears after finishing a game</h3>
@@ -151,7 +152,8 @@
   -->
   </section>
   <section>
-  <div id="lleaderboard"></div>
+  <h2>🏆 Local Leaderboard</h2>
+  <div style="width: 600px; display: table-cell;"id="lleaderboard"></div>
   <h2>Score: <span id="myText"></span></h2>
   <section>
   <script type="module">
@@ -186,7 +188,7 @@
       const q = query(scoresCol, orderBy("score", "desc"), limit(5));
       const querySnapshot = await getDocs(q);
 
-      leaderboard.innerHTML = "<h2>~~~~~~~~~~~~~</h2><ul>" +
+      leaderboard.innerHTML = "<h2>~~~~~~~~~~~~~~~~~~~~~~~~~</h2><ul>" +
         querySnapshot.docs.map(doc => {
           const data = doc.data();
           return `<li>${data.name}: ${data.score}</li>`;
@@ -345,7 +347,7 @@
     function renderLeaderboardLocale() {
       const scores = JSON.parse(localStorage.getItem("lleaderboard") || "[]");
       const container = document.getElementById("lleaderboard");
-      container.innerHTML = "<h2>🏆 Local Leaderboard</h2>" +
+      container.innerHTML = "<h2>~~~~~~~~~~~~~~~~~~~~~~</h2>" +
           scores.map(s => `<div>${s.name} : ${s.score}</div>`).join("");
 	}
 
