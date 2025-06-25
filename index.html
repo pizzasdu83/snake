@@ -126,7 +126,7 @@
 	  margin: 0 1.5%;
       width: 30%;
 	  }
-
+	
   </style>
 </head>
 <body>
@@ -134,11 +134,11 @@
   <h2>🐍 Snake Game</h2>
   </header>
   <section>
-  <h2>🏆 Leaderboard</h2>
-  <div style="width: 600px; display: table-cell;"id="leaderboard"></div>
-  <h3>Leaderboard may not work properly</h3>
-  <h3>due to data holder problems.</h3>
-  <h3>It appears after finishing a game</h3>
+  <h2 style="text-align: left;">🏆 Leaderboard</h2>
+  <div style="width: 600px; display: table-cell;" id="leaderboard"></div>
+  <h3 style="text-align: left;">Leaderboard may not work properly</h3>
+  <h3 style="text-align: left;">due to data holder problems.</h3>
+  <h3 style="text-align: left;">It appears after finishing a game</h3>
   </section>
   <section>
   <canvas id="game" width="400" height="400"></canvas>
@@ -153,9 +153,9 @@
   -->
   </section>
   <section>
-  <h2>🏆 Local Leaderboard</h2>
+  <h2 style="text-align: left;">🏆 Local Leaderboard</h2>
   <div style="width: 600px; display: table-cell;"id="lleaderboard"></div>
-  <h2>Score: <span id="myText"></span></h2>
+  <h2 style="text-align: left;">Score: <span id="myText"></span></h2>
   <section>
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
@@ -189,7 +189,7 @@
       const q = query(scoresCol, orderBy("score", "desc"), limit(5));
       const querySnapshot = await getDocs(q);
 
-      leaderboard.innerHTML = "<h2></h2><ul>" +
+      leaderboard.innerHTML = "<h2>_______</h2><ul>" +
         querySnapshot.docs.map(doc => {
           const data = doc.data();
           return `<li>${data.name}: ${data.score}</li>`;
@@ -348,7 +348,7 @@
     function renderLeaderboardLocale() {
       const scores = JSON.parse(localStorage.getItem("lleaderboard") || "[]");
       const container = document.getElementById("lleaderboard");
-      container.innerHTML = "<h2></h2>" +
+      container.innerHTML = "<h2>________</h2>" +
           scores.map(s => `<div>${s.name} : ${s.score}</div>`).join("");
 	}
 
