@@ -41,6 +41,33 @@
 	  color: white;
 	  font-family: sans-serif;
 	}
+	h4 {
+	  font-size: 1,5rem;
+	  margin-bottom: 0px;
+	  margin-top: 0px;
+	  text-align: center;
+	  color: black;
+	  font-family: sans-serif;
+	}
+	h5 {
+	  margin-top: 0px;
+	  margin-bottom: 10px;
+      text-align: center;
+      font-family: sans-serif;
+      font-size: 20px;
+      letter-spacing: 0.15rem;
+      text-transform: uppercase;
+      color: #000;
+      text-shadow: -2px 2px #ef3550,
+                   -4px 4px #f48fb1,
+                   -6px 6px #7e57c2,
+                   -8px 8px #2196f3,
+                   -10px 10px #26c6da,
+                   -12px 12px #43a047,
+                   -14px 14px #eeff41,
+                   -16px 16px #f9a825,
+                   -18px 18px #ff5722;
+	}
     body {
       background-color: #000;
       color: #fff;
@@ -81,35 +108,15 @@
       background-color: #808080;
       color: white;
     }
+	
     .button2 {
       background-color: white; 
       color: black; 
+	  vertical-align: 5px;
       border: 2px solid #808080;
     }
 
     .button2:hover {
-      background-color: #808080;
-      color: white;
-    }
-
-    .button3 {
-      background-color: white; 
-      color: black; 
-      border: 2px solid #808080;
-    }
-
-    .button3:hover {
-      background-color: #808080;
-      color: white;
-    }
-
-    .button4 {
-      background-color: white; 
-      color: black; 
-      border: 2px solid #808080;
-    }
-
-    .button4:hover {
       background-color: #808080;
       color: white;
     }
@@ -125,7 +132,71 @@
 	  float: left;
 	  margin: 0 1.5%;
       width: 30%;
-	  }
+	}
+	#alertBox {
+	  position: absolute;
+	  display: none;
+	  background: #222;
+	  color: white;
+	  padding: 20px;
+	  border: 2px solid lime;
+	  border-radius: 10px;
+	  z-index: 9999;
+	  transform: translate(-50%, -50%);
+	}
+	#pauseMenu {
+		position: absolute;
+		display: none;
+		background: #111;
+		border: 2px solid lime;
+		border-radius: 10px;
+		padding: 20px;
+		color: white;
+		z-index: 10000;
+		transform: translate(-50%, -50%);
+	}
+	@keyframes depixelate {
+		from {
+			filter: blur(100px);
+			transform: scale(0.9);
+			transform: translate(-50%, -50%);
+			opacity: 0;
+		}
+		to {
+			filter: blur(0);
+			transform: scale(1);
+			transform: translate(-50%, -50%);
+			opacity: 1;
+		}
+	}
+
+	@keyframes pixelate {
+		from {
+			filter: blur(0);
+			transform: scale(1);
+			transform: translate(-50%, -50%);
+			opacity: 1;
+		}
+		to {
+			filter: blur(8px);
+			transform: scale(0.9);
+			transform: translate(-50%, -50%);
+			opacity: 0;
+		}
+	}
+
+	.popup-show {
+		animation: depixelate 0.3s ease-out forwards;
+		display: block !important;
+	}
+
+	.popup-hide {
+		animation: pixelate 0.3s ease-in forwards;
+	}
+	#countdown {
+		transition: opacity 0.2s ease-in-out;
+	}
+
 	
   </style>
 </head>
@@ -142,14 +213,27 @@
   </section>
   <section>
   <canvas id="game" width="400" height="400"></canvas>
+  <div id="countdown" style=" position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 50px; color: white; display: none; font-family: monospace; z-index: 10001; "></div> 
+  <div id="alertBox">
+    <span id="alertMessage"></span>
+    <br><br>
+    <button class="button button1" id="alert-ok-btn"><h4>⦻K</h4></button>
+	<button class="button button2" id="restart-btn" style="margin-top: 10px;"><h5><img src="images/kqdbtd.gif" alt="Pause" style="width: 100px; height: auto; display: block; margin: 0 auto 20px;" />Retry</h5></button>
+  </div>
+  <div id="pauseMenu" style="display:none; position:absolute; background:#111; border:2px solid lime; border-radius:10px; padding:20px; color:white; z-index:10000;">
+	<h2 style="margin-left: 20px;"><img src="images/pause.gif" alt="Pause" style="width: 100px; height: auto; display: block; margin: 0 auto 20px;" /> Pause</h2>
+	<button style="background-color: #111; border: 0px solid #111;" onclick="resumeGame()"><img src="images/unpause.gif" alt="Pause" style="width: 100px; height: auto; display: block; margin: 0 auto 20px;" /><h3>Continue</h3></button><br><br>
+	<button style="background-color: #111; border: 0px solid #111;" onclick="restartGame()"><h3><img src="images/kqdbtd.gif" alt="Pause" style="width: 100px; height: auto; display: block; margin: 0 auto 20px;"/>Restart</h3></button><br><br>
+  </div>
+  <h3>Press echap or p to pause</h3>
   <!--<h1><strong>BUTTONS ARE USELESS</strong> (for now...)</h1>
   <button class="button button1" oneclick="fuckedup()"><strong>⮙</strong></button>
   <h1></h1>
-  <button class="button button3" oneclick="fuckedleft()"><strong>⮘</strong></button>
+  <button class="button button1" oneclick="fuckedleft()"><strong>⮘</strong></button>
   <button class="button space"><strong>⮘</strong></button>
-  <button class="button button4"oneclick="fuckedright()"><strong>⮚</strong></button>
+  <button class="button button1"oneclick="fuckedright()"><strong>⮚</strong></button>
   <h1></h1>
-  <button class="button button2"oneclick="fuckeddown()"><strong>⮛</strong></button>
+  <button class="button button1"oneclick="fuckeddown()"><strong>⮛</strong></button>
   -->
   </section>
   <section>
@@ -159,7 +243,7 @@
   <section>
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-    import { getFirestore, collection, addDoc, getDocs, query, orderBy, limit } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+    import { getFirestore, collection, addDoc, getDocs, query, orderBy, limit, deleteDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyC8DnvePCAvI12F5hKYM8fNL1KyNhKP4Ro",
@@ -174,19 +258,35 @@
     const db = getFirestore(app);
 
     // Fonctions Firebase pour leaderboard
-    async function submitScore(player, score) {
-      await addDoc(collection(db, "scores"), {
-        name: player,
-        score: score,
-        createdAt: new Date()
-      });
-    }
+	async function submitScore(player, score) {
+		const scoresRef = collection(db, "scores");
+
+		// 1. Ajouter le nouveau score
+		await addDoc(scoresRef, {
+			name: player,
+			score: score,
+			createdAt: new Date()
+		});
+
+		// 2. Récupérer tous les scores triés par score décroissant
+		const q = query(scoresRef, orderBy("score", "desc"));
+		const snapshot = await getDocs(q);
+
+		// 3. Supprimer les scores après le top 5
+		const scoresToDelete = snapshot.docs.slice(10);
+		for (const doc of scoresToDelete) {
+			await deleteDoc(doc.ref);
+		}
+
+		// 4. Mettre à jour le leaderboard affiché
+		renderLeaderboard();
+	}
 
     async function renderLeaderboard() {
       const leaderboard = document.getElementById("leaderboard");
 
       const scoresCol = collection(db, "scores");
-      const q = query(scoresCol, orderBy("score", "desc"), limit(5));
+      const q = query(scoresCol, orderBy("score", "desc"), limit(10));
       const querySnapshot = await getDocs(q);
 
       leaderboard.innerHTML = "<h2>_______</h2><ul>" +
@@ -208,6 +308,10 @@
     let gameOver = false;
     let seg = 0;
     let snakeColor = getRandomColor();
+	let isPaused = false;
+	window.restartGame = restartGame;
+	window.resumeGame = resumeGame;
+
 
     function fuckedup() {
 	  if (direction !== "DOWN") direction = "UP";
@@ -221,11 +325,67 @@
 	function fuckedright() {
 	  if (direction !== "LEFT") direction = "RIGHT";
 	}
+	function resumeGame() {
+	  togglePauseMenu();
+	}
+	
+	function togglePauseMenu() {
+		const pauseMenu = document.getElementById("pauseMenu");
+
+		if (isPaused) {
+			// Masquer avec animation
+			pauseMenu.classList.remove("popup-show");
+			pauseMenu.classList.add("popup-hide");
+
+			setTimeout(() => {
+				pauseMenu.style.display = "none";
+				pauseMenu.classList.remove("popup-hide");
+			}, 300);
+			
+			let count = 3;
+			countdown.innerText = count;
+			countdown.style.display = "block";
+			
+			const countdownInterval = setInterval(() => {
+				count--;
+				if (count > 0) {
+					countdown.innerText = count;
+				} else {
+					clearInterval(countdownInterval);
+					countdown.style.display = "none";
+					isPaused = false;
+				}
+			}, 500);
+
+		} else {
+			// Montrer avec animation
+			const canvas = document.getElementById("game");
+			const rect = canvas.getBoundingClientRect();
+
+			pauseMenu.style.left = rect.left + canvas.width / 2 + "px";
+			pauseMenu.style.top = rect.top + canvas.height / 2 + "px";
+			pauseMenu.style.display = "block";
+
+			// Forcer le reflow pour relancer l’animation
+			void pauseMenu.offsetWidth;
+
+			pauseMenu.classList.remove("popup-hide");
+			pauseMenu.classList.add("popup-show");
+
+			isPaused = true;
+		}
+	}
+
+
 
     document.addEventListener("keydown", (e) => {
       if (!hasStarted) {
         hasStarted = true;
       }
+	  if (e.code === "KeyP" || e.code === "Escape") {
+		togglePauseMenu();
+	  }
+
 
       switch (e.code) {
         case "ArrowUp":
@@ -263,9 +423,54 @@
 		}
 		return color;
 	}
+	function restartGame() {
+		snake = [{ x: 200, y: 200, color: "lime" }];
+		food = { x: box * 5, y: box * 5 };
+		direction = null;
+		hasStarted = false;
+		score = 0;
+		gameOver = false;
+		seg = 0;
+		snakeColor = getRandomColor();
+		document.getElementById("myText").innerText = "0";
+		// Redémarrer le setInterval
+		togglePauseMenu();
+		clearInterval(game);
+		game = setInterval(draw, 100);
+	}
 
+	function showAlert(message) {
+	  const alertBox = document.getElementById("alertBox");
+	  const canvas = document.getElementById("game");
+	  const rect = canvas.getBoundingClientRect();
+	  alertBox.style.left = rect.left + canvas.width / 2 + "px";
+	  alertBox.style.top = rect.top + canvas.height / 2 + "px";
+	  alertBox.classList.add("popup-show");
+	  document.getElementById("alertMessage").innerText = message;
+	}
+
+
+	function closeAlert() {
+		const alertBox = document.getElementById("alertBox")
+		alertBox.classList.add("popup-hide");
+		setTimeout(() => {
+		  alertBox.style.display = "none";
+		}, 300);
+	}
+
+	window.onload = () => {
+		window.focus();
+		document.body.focus();
+
+		document.getElementById("alert-ok-btn").addEventListener("click", closeAlert);
+		document.getElementById("restart-btn").addEventListener("click", () => {
+			closeAlert();
+			location.reload();
+		});
+	};
 	
     function draw() {
+		if (isPaused) return;
 		ctx.clearRect(0, 0, canvas.width, canvas.height);
 
 		if (!hasStarted || direction === null) {
@@ -309,6 +514,7 @@
 			if (name) submitScore(name, score);
 			submitScoreLocale();
 			renderLeaderboard();
+			showAlert("Game Over! (づ｡◕‿‿◕｡)づ Score: " + score);
 			return;
 		}
 
