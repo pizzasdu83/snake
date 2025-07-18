@@ -263,10 +263,11 @@
 
 		// 1. Ajouter le nouveau score
 		await addDoc(scoresRef, {
-			name: player,
-			score: score,
-			createdAt: new Date()
-		});
+		  name: player,
+	  	  score: score,
+	          createdAt: new Date(),
+	          secret: "Hamburger 🍔" // doit correspondre à la règle
+                });
 
 		// 2. Récupérer tous les scores triés par score décroissant
 		const q = query(scoresRef, orderBy("score", "desc"));
