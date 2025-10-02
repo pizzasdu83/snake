@@ -771,12 +771,6 @@
 		applyBackground();
 	}
 
-	function setColor(color) {
-		setCookie("bgcolor", color, 7);
-		setCookie("bgmode", "free", 7);
-		applyBackground();
-		}
-
 	function applyBackground() {
 		let mode = getCookie("bgmode") || "free";
 
