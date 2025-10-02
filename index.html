@@ -650,6 +650,10 @@
       container.innerHTML = "<h2>________</h2>" +
           scores.map(s => `<div>${s.name} : ${s.score}</div>`).join("");
 	}
+
+	renderLeaderboardLocale();
+  </script>
+  <script>  
 	function setCookie(name, value, days) {
 		const d = new Date();
 		d.setTime(d.getTime() + (days*24*60*60*1000));
@@ -796,8 +800,6 @@
 		});
 	}
 	
-
-	renderLeaderboardLocale();
 	updateDisplay();
 	applyColor();
 	applyBackground();
