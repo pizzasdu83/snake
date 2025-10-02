@@ -68,12 +68,66 @@
                    -16px 16px #f9a825,
                    -18px 18px #ff5722;
 	}
-    body {
-      background-color: #000;
-      color: #fff;
-      font-family: sans-serif;
-      text-align: center;
-    }
+    body.color {
+		margin: 0;
+		font-family: Arial, sans-serif;
+		transition: background-color 0.3s ease;
+	}
+	body.gradient {
+		font-family: Arial, sans-serif;
+		background-size: cover;
+		height: 100vh;
+		background: linear-gradient(to top right,rgba(0, 0, 255, 1) 0%, rgba(255, 0, 0, 1) 100%);
+	}
+	body.image {
+		font-family: Arial, sans-serif;
+		background-size: cover;
+		background-image:url("https://raw.githubusercontent.com/pizzasdu83/ressources/main/suyu__Pattern-Background.png");
+	}
+	/* Bouton flottant */
+	#cookie-manager-btn {
+		position: fixed;
+		bottom: 20px;
+		right: 20px;
+		border: none;
+		border-radius: 50%;
+		width: 60px;
+		height: 60px;
+		cursor: pointer;
+		font-size: 30px;
+		box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+	}
+	/* Pop-up */
+	#cookie-popup {
+		display: none;
+		position: fixed;
+		top: 50%;
+		left: 50%;
+		transform: translate(-50%, -50%);
+		background: #fff;
+		padding: 20px;
+		width: 340px;
+		border: 2px solid #333;
+		border-radius: 10px;
+		box-shadow: 0 8px 15px rgba(0,0,0,0.5);
+		text-align: center;
+		z-index: 1000;
+		animation: depixelate 0.3s ease-out forwards;
+	}
+	#big-cookie {
+		width: 100px;
+		height: 100px;
+		background: url("https://static.wikia.nocookie.net/cookieclicker/images/5/5a/PerfectCookie.png");
+		background-size: cover;
+		border-radius: 50%;
+		margin: 15px auto;
+		cursor: pointer;
+		transition: transform 0.1s;
+	}
+	#big-cookie:active {
+		transform: scale(0.9);
+	}
+
     #leaderboard {
       max-width: 300px;
       margin: auto;
@@ -193,6 +247,9 @@
 	.popup-hide {
 		animation: pixelate 0.3s ease-in forwards;
 	}
+	.store-btn { background: #ddd; }
+	.accept-btn { background: #4CAF50; color: white; }
+	.refuse-btn { background: #f44336; color: white; }
 	#countdown {
 		transition: opacity 0.2s ease-in-out;
 	}
@@ -204,6 +261,42 @@
   <header>
   <h2>🐍 Snake Game</h2>
   </header>
+	<!-- Bouton flottant -->
+	<input type="image" src="gcookie.png" id="cookie-manager-btn" onclick="openPopup()" width="60" height="60">
+
+	<!-- Pop-up du mini-jeu -->
+	<div id="cookie-popup">
+		<h2>Gestion des cookies</h2>
+		<p>Cookies collectés : <span id="cookie-count">0</span></p>
+		<div id="big-cookie" onclick="clickCookie()"></div>
+		<p>🎯 Objectif : <span id="goal">1000</span> cookies</p>
+
+		<div id="store">
+			<h3>Magasin</h3>
+			<button class="store-btn" onclick="buyUpgrade('click')">+1 par clic (coût 10)</button>
+			<button class="store-btn" onclick="buyUpgrade('auto')">Auto-click (coût 30)</button>
+		</div>
+
+		<!-- Sélecteur de couleur -->
+		<div id="color-menu" style="margin-top:15px; display:none;">
+			<h3>🎨 Choisis ton fond</h3>
+				<label>
+					<input type="radio" name="bgmode" value="free" checked onchange="setBackgroundMode(this.value)">Couleure libre
+				</label><br>
+					<input type="color" id="colorPicker" onchange="setColor(this.value)">
+				<label>
+					<input type="radio" name="bgmode" value="preset-gradient" onchange="setBackgroundMode(this.value)">Couleure Signature
+				</label><br>
+				<label>
+					<input type="radio" name="bgmode" value="preset-image" onchange="setBackgroundMode(this.value)">Suyu
+				</label>
+		</div>
+
+		<div id="choices" style="margin-top:15px;">
+			<button class="accept-btn" onclick="acceptCookies()" enabled>Accepter</button>
+			<button class="refuse-btn" onclick="refuseCookies()" disabled>Refuser</button>
+		</div>
+	</div>
   <section>
   <h2 style="text-align: left;">🏆 Leaderboard</h2>
   <div style="width: 600px; display: table-cell;" id="leaderboard"></div>
@@ -551,16 +644,173 @@
       	  renderLeaderboardLocale(); // Update the leaderboard display
 	}
 
-
-    function renderLeaderboardLocale() {
+	function renderLeaderboardLocale() {
       const scores = JSON.parse(localStorage.getItem("lleaderboard") || "[]");
       const container = document.getElementById("lleaderboard");
       container.innerHTML = "<h2>________</h2>" +
           scores.map(s => `<div>${s.name} : ${s.score}</div>`).join("");
 	}
+	function setCookie(name, value, days) {
+		const d = new Date();
+		d.setTime(d.getTime() + (days*24*60*60*1000));
+		document.cookie = name + "=" + value + ";expires=" + d.toUTCString() + ";path=/;SameSite=Lax;Secure";
+	}
+
+
+	function getCookie(name) {
+		const cname = name + "=";
+		const ca = document.cookie.split(';');
+		for (let c of ca) {
+			c = c.trim();
+			if (c.indexOf(cname) === 0) {
+				return c.substring(cname.length);
+			}
+		}
+		return "";
+	}
+
+	function eraseCookie(name) {
+		document.cookie = name+"=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+	}
+	let cookies = parseInt(getCookie("cookies") || "0");
+	let perClick = parseInt(getCookie("perClick") || "1");
+	let autoClick = parseInt(getCookie("autoClick") || "0");
+	let bgColor = getCookie("bgcolor") || "";
+	let opened = 0;
+	const goal = 1000;
+
+	const countEl = document.getElementById("cookie-count");
+	const acceptBtn = document.querySelector(".accept-btn");
+	const refuseBtn = document.querySelector(".refuse-btn");
+	const colorMenu = document.getElementById("color-menu");
+	const colorPicker = document.getElementById("colorPicker");
+
+	function updateDisplay() {
+		countEl.textContent = cookies;
+		if (cookies >= goal) {
+			refuseBtn.disabled = false;
+		}
+		if (cookies >= 5) {
+			colorMenu.style.display = "block";
+		}
+	}
+
+	function clickCookie() {
+		cookies += perClick;
+		setCookie("cookies", cookies, 7);
+		updateDisplay();
+	}
+
+	function buyUpgrade(type) {
+		if (type === "click" && cookies >= 10) {
+			cookies -= 10;
+			perClick++;
+			setCookie("perClick", perClick, 7);
+		} else if (type === "auto" && cookies >= 30) {
+			cookies -= 30;
+			autoClick++;
+			setCookie("autoClick", autoClick, 7);
+		}
+		setCookie("cookies", cookies, 7);
+		updateDisplay();
+	}
+
+	setInterval(() => {
+		if (autoClick > 0) {
+			cookies += autoClick;
+			setCookie("cookies", cookies, 7);
+			updateDisplay();
+		}
+	}, 1000);
+
+	function setColor(color) {
+		bgColor = color;
+		setCookie("bgcolor", bgColor, 7);
+		applyColor();
+	}
+
+	function applyColor() {
+		const color = getCookie("bgcolor");
+		if (color) {
+			document.body.style.backgroundColor = color;
+			if (colorPicker) colorPicker.value = color; // maj du sélecteur
+		}
+	}
+
+	function acceptCookies() {
+		alert("Tu as accepté les cookies 🍪");
+		closePopup();
+	}
+
+	function refuseCookies() {
+		alert("Tu as refusé les cookies ❌");
+		setCookie("cookies", 0, 7);
+		setCookie("perClick", 1, 7);
+		setCookie("autoClick", 0, 7);
+		eraseCookie("bgcolor");
+		document.body.style.backgroundColor = "";
+		closePopup();
+	}
+
+	function openPopup() {
+		if (opened == 0){
+			document.getElementById("cookie-popup").style.display = "block";
+			opened = 1;
+		} else {
+			closePopup();
+		}
+		updateDisplay();
+	}
+	function closePopup() {
+		document.getElementById("cookie-popup").style.display = "none";
+		opened = 0
+	}
+
+	function setBackgroundMode(mode) {
+		setCookie("bgmode", mode, 7);
+		applyBackground();
+	}
+
+	function setColor(color) {
+		setCookie("bgcolor", color, 7);
+		setCookie("bgmode", "free", 7);
+		applyBackground();
+		}
+
+	function applyBackground() {
+		let mode = getCookie("bgmode") || "free";
+
+		document.body.classList.remove("color", "gradient", "image");
+		document.body.style.background = "";
+		document.body.style.backgroundColor = "";
+		document.body.style.backgroundImage = "";
+
+		if (mode === "free") {
+			let color = getCookie("bgcolor") || "#ffffff";
+			document.body.classList.add("color");
+			document.body.style.backgroundColor = color;
+			if (colorPicker) colorPicker.value = color; // MAJ du picker
+		} else if (mode === "preset-gradient") {
+			document.body.classList.add("gradient");
+		} else if (mode === "preset-image") {
+			document.body.classList.add("image");
+		}
+
+		let radios = document.querySelectorAll('input[name="bgmode"]');
+		radios.forEach(r => {
+			r.checked = (r.value === mode);
+		});
+	}
+	function setBackgroundMode(mode) {
+		setCookie("bgmode", mode, 7);
+		applyBackground();
+	}
+	
 
 	renderLeaderboardLocale();
-	
+	updateDisplay();
+	applyColor();
+	applyBackground();
   </script>
 </body>
 </html>
